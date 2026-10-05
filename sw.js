@@ -1,45 +1,50 @@
-const CACHE_NAME = 'cornell-cc-v1';
+// CADA VEZ QUE HAGAS UN CAMBIO EN TU CÓDIGO, CAMBIA ESTE NÚMERO (ej. v3, v4, v5...)
+const CACHE_NAME = 'cornell-cc-v3'; 
+
 const urlsToCache = [
     './',
     './index.html',
     './style.css',
     './app.js',
-    './manifest.json'
+    './manifest.json',
+    './icon.png'
 ];
 
-// Instalación: Guardar los archivos estáticos en caché
 self.addEventListener('install', event => {
+    // Fuerzo a que el nuevo SW se instale inmediatamente sin esperar a que cierres la app
+    self.skipWaiting(); 
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                console.log('Archivos cacheados para uso offline');
+                console.log(`Cacheando archivos para ${CACHE_NAME}`);
                 return cache.addAll(urlsToCache);
             })
     );
 });
 
-// Activación: Limpiar cachés antiguas si se actualiza la versión de la app
 self.addEventListener('activate', event => {
-    const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                    // Borro todas las cachés viejas que no sean la versión actual
+                    if (cacheName !== CACHE_NAME) {
+                        console.log(`Borrando caché antigua: ${cacheName}`);
                         return caches.delete(cacheName);
                     }
                 })
             );
         })
     );
+    // Tomar el control de los clientes de inmediato
+    return self.clients.claim(); 
 });
 
-// Interceptar peticiones para funcionar 100% offline
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                // Devuelve el archivo en caché si existe, si no, usa la red
+                // Devuelve la caché o hace la petición a la red
                 return response || fetch(event.request);
             })
     );
