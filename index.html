@@ -28,9 +28,22 @@
             <input type="text" id="noteTitle" class="title-input" placeholder="Título del Apunte...">
             
             <div class="toolbar-actions">
-                <input type="color" id="colorPicker" value="#2c3e50" title="Personalizar color del cuaderno">
+                <!-- Selector de color de fondo -->
+                <div style="display:flex; flex-direction:column; align-items:center; font-size:10px;">
+                    <label style="color: var(--primary); font-weight: bold;">Fondo</label>
+                    <input type="color" id="bgColorPicker" value="#f8f9fa" title="Color de fondo de la app">
+                </div>
+                <!-- Selector de color principal (líneas y botones) -->
+                <div style="display:flex; flex-direction:column; align-items:center; font-size:10px;">
+                    <label style="color: var(--primary); font-weight: bold;">Líneas</label>
+                    <input type="color" id="colorPicker" value="#2c3e50" title="Color principal">
+                </div>
+                
                 <button class="btn btn-save" id="btnGuardar" title="Guardar apunte">💾 Guardar</button>
                 <button class="btn btn-export" id="btnExportar" title="Exportar a PDF">📥 PDF</button>
+                
+                <!-- Botón de instalación PWA (se muestra automáticamente si es compatible) -->
+                <button class="btn btn-install" id="btnInstalar" style="display: none;">📲 Instalar App</button>
             </div>
         </div>
 
