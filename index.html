@@ -15,8 +15,12 @@
     <!-- Menú lateral -->
     <aside id="sidebar">
         <div class="sidebar-header">
-            <h3>Cuaderno CC</h3>
-            <button class="btn btn-new" id="btnNuevaNota">+ Nuevo</button>
+            <!-- Contenedor con el logo y el título -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <img src="./icon.png" alt="Logo Cuaderno" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;">
+                <h3 style="margin: 0; font-size: 1.1rem;">Cuaderno CC</h3>
+            </div>
+            <button class="btn btn-new" id="btnNuevaNota" title="Crear nueva nota">+ Nuevo</button>
         </div>
         <ul class="notes-list" id="notesList"></ul>
     </aside>
