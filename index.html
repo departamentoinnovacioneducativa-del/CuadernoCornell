@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuaderno Cornel. CC</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📓</text></svg>">
+</head>
+<body>
+    <!-- Menú lateral -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <h3>Cuaderno CC</h3>
+            <button class="btn btn-new" id="btnNuevaNota">+ Nuevo</button>
+        </div>
+        <ul class="notes-list" id="notesList"></ul>
+    </aside>
+
+    <!-- Área principal -->
+    <main id="mainContent">
+        <div class="toolbar">
+            <button class="btn btn-menu" id="btnToggleMenu">☰ Menú</button>
+            <input type="text" id="noteTitle" class="title-input" placeholder="Título del Apunte...">
+            <button class="btn btn-export" id="btnExportar" title="Exportar a PDF">📥 PDF</button>
+        </div>
+
+        <div class="cornell-container">
+            <div class="cornell-header">
+                <div class="input-group flex-2">
+                    <label>Tema / Materia:</label>
+                    <input type="text" id="noteSubject" placeholder="Ej. Psicología a Distancia...">
+                </div>
+                <div class="input-group flex-1">
+                    <label>Fecha:</label>
+                    <input type="date" id="noteDate">
+                </div>
+            </div>
+            
+            <div class="box left-col">
+                <label>Palabras Clave / Preguntas</label>
+                <textarea id="cues" placeholder="Anota aquí conceptos, dudas o ideas clave..."></textarea>
+            </div>
+            
+            <div class="box right-col">
+                <label>Notas de Clase</label>
+                <textarea id="notes" placeholder="Desarrolla aquí tus apuntes principales..."></textarea>
+            </div>
+            
+            <div class="box summary-col">
+                <label>Resumen / Síntesis</label>
+                <textarea id="summary" placeholder="Escribe un breve resumen de esta página..."></textarea>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
