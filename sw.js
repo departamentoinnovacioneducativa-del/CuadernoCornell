@@ -1,6 +1,4 @@
 const CACHE_NAME = 'cornell-cc-v1';
-
-// Lista de archivos que necesitamos guardar para que funcione offline
 const urlsToCache = [
     './',
     './index.html',
@@ -14,7 +12,7 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                console.log('Archivos cacheados correctamente para uso offline');
+                console.log('Archivos cacheados para uso offline');
                 return cache.addAll(urlsToCache);
             })
     );
@@ -41,7 +39,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                // Devuelve el archivo de la caché si existe; si no, usa la red
+                // Devuelve el archivo en caché si existe, si no, usa la red
                 return response || fetch(event.request);
             })
     );
