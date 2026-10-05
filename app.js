@@ -1,8 +1,10 @@
+// Inicializar el almacenamiento local y recuperar colores
 let notas = JSON.parse(localStorage.getItem('cornell_notes')) || [];
 let notaActualId = null;
 let colorTema = localStorage.getItem('cornell_theme_color') || '#2c3e50';
 let colorFondo = localStorage.getItem('cornell_bg_color') || '#f8f9fa';
 
+// Referencias al DOM
 const els = {
     list: document.getElementById('notesList'),
     title: document.getElementById('noteTitle'),
@@ -13,10 +15,10 @@ const els = {
     summary: document.getElementById('summary'),
     sidebar: document.getElementById('sidebar'),
     colorPicker: document.getElementById('colorPicker'),
-    bgColorPicker: document.getElementById('bgColorPicker'), // Nuevo
+    bgColorPicker: document.getElementById('bgColorPicker'),
     pdfArea: document.getElementById('pdfArea'),
     toast: document.getElementById('toast'),
-    btnInstalar: document.getElementById('btnInstalar') // Nuevo
+    btnInstalar: document.getElementById('btnInstalar')
 };
 
 // Aplicar colores al iniciar
@@ -28,7 +30,7 @@ els.bgColorPicker.value = colorFondo;
 // --- Lógica del Botón de Instalación (PWA) ---
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); // Evita que Chrome muestre el mini-banner automático
+    e.preventDefault(); // Evita el mini-banner automático de Chrome
     deferredPrompt = e;
     els.btnInstalar.style.display = 'inline-block'; // Muestra nuestro botón
 });
@@ -44,12 +46,26 @@ els.btnInstalar.addEventListener('click', async () => {
     }
 });
 
-// --- Registro del Service Worker ---
+// --- Registro y Control de Versiones (PWA) ---
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('SW registrado'))
+            .then(reg => {
+                console.log('SW registrado');
+                // Fuerza la búsqueda de una nueva versión del sw.js en el servidor
+                reg.update();
+            })
             .catch(err => console.error('Error SW', err));
+        
+        // Escucha si un nuevo Service Worker toma el control (se forzó una actualización)
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                refreshing = true;
+                // Recarga la pestaña automáticamente para aplicar la nueva versión
+                window.location.reload();
+            }
+        });
     });
 }
 
@@ -58,17 +74,20 @@ document.getElementById('btnNuevaNota').addEventListener('click', nuevaNota);
 document.getElementById('btnGuardar').addEventListener('click', guardarManual);
 document.getElementById('btnExportar').addEventListener('click', exportarPDF);
 els.colorPicker.addEventListener('input', (e) => aplicarColor(e.target.value));
-els.bgColorPicker.addEventListener('input', (e) => aplicarFondo(e.target.value)); // Nuevo
+els.bgColorPicker.addEventListener('input', (e) => aplicarFondo(e.target.value));
 
+// Menú Hamburguesa para móviles
 document.getElementById('btnToggleMenu').addEventListener('click', () => {
     els.sidebar.classList.toggle('open');
 });
 
+// Autoguardado silencioso al escribir
 ['title', 'subject', 'date', 'cues', 'notes', 'summary'].forEach(id => {
     els[id].addEventListener('input', guardarActual);
 });
 
 // --- Funciones Principales ---
+
 function aplicarColor(color) {
     document.documentElement.style.setProperty('--primary', color);
     document.getElementById('metaThemeColor').setAttribute('content', color);
@@ -95,7 +114,13 @@ function renderLista() {
 
 function nuevaNota() {
     const nueva = {
-        id: Date.now(), title: '', subject: '', date: new Date().toISOString().split('T')[0], cues: '', notes: '', summary: ''
+        id: Date.now(), 
+        title: '', 
+        subject: '', 
+        date: new Date().toISOString().split('T')[0], 
+        cues: '', 
+        notes: '', 
+        summary: ''
     };
     notas.push(nueva);
     cargarNota(nueva.id);
@@ -107,8 +132,12 @@ window.cargarNota = function(id) {
     notaActualId = id;
     const n = notas.find(item => item.id === id);
     if (n) {
-        els.title.value = n.title; els.subject.value = n.subject; els.date.value = n.date;
-        els.cues.value = n.cues; els.notes.value = n.notes; els.summary.value = n.summary;
+        els.title.value = n.title; 
+        els.subject.value = n.subject; 
+        els.date.value = n.date;
+        els.cues.value = n.cues; 
+        els.notes.value = n.notes; 
+        els.summary.value = n.summary;
     }
     renderLista();
     if(window.innerWidth <= 768) els.sidebar.classList.remove('open');
@@ -119,13 +148,21 @@ function guardarActual() {
     if (!notaActualId) { nuevaNota(); return; }
     const n = notas.find(item => item.id === notaActualId);
     if (n) {
-        n.title = els.title.value; n.subject = els.subject.value; n.date = els.date.value;
-        n.cues = els.cues.value; n.notes = els.notes.value; n.summary = els.summary.value;
-        guardarStorage(); renderLista();
+        n.title = els.title.value; 
+        n.subject = els.subject.value; 
+        n.date = els.date.value;
+        n.cues = els.cues.value; 
+        n.notes = els.notes.value; 
+        n.summary = els.summary.value;
+        guardarStorage(); 
+        renderLista();
     }
 }
 
-function guardarManual() { guardarActual(); mostrarToast(); }
+function guardarManual() { 
+    guardarActual(); 
+    mostrarToast(); 
+}
 
 function mostrarToast() {
     els.toast.classList.add('show');
@@ -148,12 +185,16 @@ function limpiarCampos() {
     ['title', 'subject', 'date', 'cues', 'notes', 'summary'].forEach(id => els[id].value = '');
 }
 
-function guardarStorage() { localStorage.setItem('cornell_notes', JSON.stringify(notas)); }
+function guardarStorage() { 
+    localStorage.setItem('cornell_notes', JSON.stringify(notas)); 
+}
 
+// --- Generación de PDF Real con html2pdf.js ---
 function exportarPDF() {
     const elemento = els.pdfArea;
     const nombreArchivo = els.title.value ? `${els.title.value}.pdf` : 'Apunte_Cornell.pdf';
     
+    // Expandir textareas para que no se corte el texto oculto
     const textareas = elemento.querySelectorAll('textarea');
     textareas.forEach(ta => {
         ta.style.height = 'auto';
@@ -163,8 +204,11 @@ function exportarPDF() {
     elemento.classList.add('pdf-mode');
 
     const opt = {
-        margin: 10, filename: nombreArchivo, image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        margin: 10, 
+        filename: nombreArchivo, 
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true }, 
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     html2pdf().set(opt).from(elemento).save().then(() => {
@@ -173,4 +217,5 @@ function exportarPDF() {
     });
 }
 
+// --- Inicio de la Aplicación ---
 if (notas.length > 0) cargarNota(notas[0].id); else nuevaNota();
