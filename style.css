@@ -1,150 +1,152 @@
-/* STREAMING_CHUNK:Definiendo variables y configuración base... /
-/ Variables de Color */
+/* Variables de Color Dinámicas */
 :root {
---primary: #2c3e50;
---accent: #e74c3c;
---bg: #f8f9fa;
---border: #bdc3c7;
---text: #333;
+    --primary: #2c3e50; /* Este valor cambiará dinámicamente con JS */
+    --accent: #e74c3c;
+    --bg: #f8f9fa;
+    --border: #bdc3c7;
+    --text: #333;
 }
 
-{ box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background: var(--bg);
-color: var(--text);
-display: flex;
-height: 100vh;
-overflow: hidden;
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: var(--bg); 
+    color: var(--text); 
+    display: flex; 
+    height: 100vh; 
+    overflow: hidden; 
 }
 
-/* STREAMING_CHUNK:Estilizando la barra lateral (Sidebar)... /
-/ --- Sidebar --- */
-aside {
-width: 280px;
-background: #fff;
-border-right: 1px solid var(--border);
-display: flex;
-flex-direction: column;
-transition: transform 0.3s ease;
-z-index: 100;
+/* --- Sidebar --- */
+aside { 
+    width: 280px; 
+    background: #fff; 
+    border-right: 1px solid var(--border); 
+    display: flex; 
+    flex-direction: column; 
+    transition: transform 0.3s ease; 
+    z-index: 100;
 }
-.sidebar-header {
-padding: 15px;
-background: var(--primary);
-color: #fff;
-display: flex;
-justify-content: space-between;
-align-items: center;
+.sidebar-header { 
+    padding: 15px; 
+    background: var(--primary); 
+    color: #fff; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    transition: background 0.3s;
 }
 
-/* STREAMING_CHUNK:Estilizando botones e interactividad... /
-/ --- Botones --- */
+/* --- Botones y Controles --- */
 .btn { border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; color: white; }
 .btn:hover { opacity: 0.9; }
 .btn-new { background: var(--accent); }
+.btn-save { background: #3498db; }
 .btn-export { background: #27ae60; }
-.btn-menu { background: var(--primary); display: none; margin-right: 10px; }
+.btn-menu { background: var(--primary); display: none; margin-right: 10px; transition: background 0.3s; }
+
+.toolbar-actions { display: flex; align-items: center; gap: 10px; }
+
+/* Selector de color personalizado */
+input[type="color"] { border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; padding: 0; background: transparent; }
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: 2px solid var(--border); border-radius: 50%; transition: border-color 0.3s; }
 
 /* --- Lista de Notas --- */
 .notes-list { list-style: none; overflow-y: auto; flex: 1; }
-.note-item { padding: 12px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.note-item { padding: 12px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-left 0.3s, background 0.3s; }
 .note-item:hover, .note-item.active { background: #edf2f7; border-left: 4px solid var(--primary); }
 .note-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; flex: 1; }
 .delete-btn { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 16px; padding: 5px; }
 .delete-btn:hover { background: #fadbd8; border-radius: 4px; }
 
-/* STREAMING_CHUNK:Configurando el área principal de trabajo... /
-/ --- Área Principal --- */
+/* --- Área Principal --- */
 main { flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; position: relative;}
-.toolbar { display: flex; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-.title-input { font-size: 1.5rem; font-weight: bold; border: none; border-bottom: 2px solid var(--primary); background: transparent; outline: none; padding: 5px; flex: 1; min-width: 200px; color: var(--primary); }
+.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+.title-input { font-size: 1.5rem; font-weight: bold; border: none; border-bottom: 2px solid var(--primary); background: transparent; outline: none; padding: 5px; flex: 1; min-width: 200px; color: var(--primary); transition: border-color 0.3s, color 0.3s; }
 
-/* STREAMING_CHUNK:Construyendo la estructura Grid del método Cornell... /
-/ --- Grid Método Cornell --- */
-.cornell-container {
-display: grid;
-grid-template-columns: 30% 70%;
-grid-template-rows: auto 1fr auto;
-gap: 15px;
-flex: 1;
-background: #fff;
-padding: 20px;
-border-radius: 8px;
-box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-min-height: 500px;
-}
-
-.cornell-header { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
-.input-group { display: flex; flex-direction: column; }
-.input-group label { font-size: 0.85rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; }
-.input-group input { border: 1px solid var(--border); padding: 8px; border-radius: 4px; font-family: inherit; font-size: 1rem; }
-.input-group input:focus { border-color: var(--primary); outline: none;}
-.flex-2 { flex: 2; min-width: 200px; }
-.flex-1 { flex: 1; min-width: 130px; }
-
-/* STREAMING_CHUNK:Estilizando las cajas de texto y líneas divisorias... */
-.box { display: flex; flex-direction: column; }
-.box label { font-size: 0.85rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;}
-.box textarea { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 10px; resize: none; font-family: inherit; outline: none; line-height: 1.6; font-size: 1rem; }
-.box textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1); }
-
-/* Líneas divisorias clásicas de Cornell */
-.left-col { grid-column: 1; border-right: 2px solid var(--primary); padding-right: 15px; }
-.right-col { grid-column: 2; }
-.summary-col { grid-column: 1 / -1; border-top: 2px solid var(--primary); padding-top: 15px; height: 160px; }
-
-/* STREAMING_CHUNK:Adaptando el diseño para dispositivos móviles (Responsive)... /
-/ --- Diseño Responsivo (Android/Móviles) --- */
-@media (max-width: 768px) {
-body { position: relative; }
-
-aside { position: absolute; height: 100%; transform: translateX(-100%); box-shadow: 5px 0 15px rgba(0,0,0,0.2); }
-aside.open { transform: translateX(0); }
-
-.btn-menu { display: inline-block; }
-
-/* En móviles, las columnas se apilan */
-.cornell-container { 
-    grid-template-columns: 1fr; 
-    display: flex; 
-    flex-direction: column; 
-}
-.left-col { border-right: none; border-bottom: 2px dashed var(--primary); padding-right: 0; padding-bottom: 15px; min-height: 150px; }
-.right-col { min-height: 300px; }
-.summary-col { border-top: 2px solid var(--primary); height: 150px; }
-
-
-}
-
-/* STREAMING_CHUNK:Preparando la vista para impresión y exportación a PDF... /
-/ --- Exportación a PDF (Print) --- */
-@media print {
-aside, .toolbar, .btn { display: none !important; }
-body { background: white; height: auto; overflow: visible; display: block; }
-main { padding: 0; display: block; }
-
+/* --- Grid Método Cornell --- */
 .cornell-container { 
     display: grid; 
     grid-template-columns: 30% 70%; 
     grid-template-rows: auto 1fr auto; 
-    gap: 0; 
-    border: 2px solid #000; 
-    padding: 0; 
-    box-shadow: none; 
-    border-radius: 0; 
-    height: 95vh; 
-    page-break-inside: avoid; 
+    gap: 15px; 
+    flex: 1; 
+    background: #fff; 
+    padding: 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    min-height: 500px; 
 }
 
-.cornell-header { padding: 15px; border-bottom: 2px solid #000; margin: 0; }
-.input-group input { border: none; padding: 0; font-size: 1rem; font-weight: bold; color: #000; }
-.input-group label { color: #000; }
+.cornell-header { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; transition: border-color 0.3s; }
+.input-group { display: flex; flex-direction: column; }
+.input-group label { font-size: 0.85rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; transition: color 0.3s; }
+.input-group input { border: 1px solid var(--border); padding: 8px; border-radius: 4px; font-family: inherit; font-size: 1rem; color: var(--text); }
+.input-group input:focus { border-color: var(--primary); outline: none;}
+.flex-2 { flex: 2; min-width: 200px; }
+.flex-1 { flex: 1; min-width: 130px; }
 
-.box { padding: 15px; }
-.box label { color: #000; }
-.box textarea { border: none !important; resize: none; overflow: hidden; padding: 0; font-size: 11pt; color: #000; }
+.box { display: flex; flex-direction: column; }
+.box label { font-size: 0.85rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s;}
+.box textarea { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 10px; resize: none; font-family: inherit; outline: none; line-height: 1.6; font-size: 1rem; color: var(--text); }
+.box textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1); }
 
-.left-col { border-right: 2px solid #000; padding-right: 15px; }
-.summary-col { border-top: 2px solid #000; height: 15vh; }
+/* Líneas divisorias de Cornell */
+.left-col { grid-column: 1; border-right: 2px solid var(--primary); padding-right: 15px; transition: border-color 0.3s; }
+.right-col { grid-column: 2; }
+.summary-col { grid-column: 1 / -1; border-top: 2px solid var(--primary); padding-top: 15px; height: 160px; transition: border-color 0.3s; }
+
+/* --- Notificación Flotante (Toast) --- */
+.toast {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #27ae60;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* --- Diseño Responsivo (Android/Móviles) --- */
+@media (max-width: 768px) {
+    body { position: relative; }
+    
+    aside { position: absolute; height: 100%; transform: translateX(-100%); box-shadow: 5px 0 15px rgba(0,0,0,0.2); }
+    aside.open { transform: translateX(0); }
+    
+    .btn-menu { display: inline-block; }
+    
+    .cornell-container { 
+        grid-template-columns: 1fr; 
+        display: flex; 
+        flex-direction: column; 
+    }
+    .left-col { border-right: none; border-bottom: 2px dashed var(--primary); padding-right: 0; padding-bottom: 15px; min-height: 150px; }
+    .right-col { min-height: 300px; }
+    .summary-col { border-top: 2px solid var(--primary); height: 150px; }
+}
+
+/* --- Estilos específicos para la generación de PDF --- */
+.pdf-mode {
+    border: none !important;
+    box-shadow: none !important;
+}
+.pdf-mode input, .pdf-mode textarea {
+    border: none !important;
+    background: transparent !important;
+    resize: none !important;
+    overflow: hidden !important;
+}
