@@ -6,8 +6,10 @@
     <title>Cuaderno Cornel. CC</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2c3e50">
+    <meta name="theme-color" content="#2c3e50" id="metaThemeColor">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📓</text></svg>">
+    <!-- Librería externa para exportación real a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <!-- Menú lateral -->
@@ -24,10 +26,16 @@
         <div class="toolbar">
             <button class="btn btn-menu" id="btnToggleMenu">☰ Menú</button>
             <input type="text" id="noteTitle" class="title-input" placeholder="Título del Apunte...">
-            <button class="btn btn-export" id="btnExportar" title="Exportar a PDF">📥 PDF</button>
+            
+            <div class="toolbar-actions">
+                <input type="color" id="colorPicker" value="#2c3e50" title="Personalizar color del cuaderno">
+                <button class="btn btn-save" id="btnGuardar" title="Guardar apunte">💾 Guardar</button>
+                <button class="btn btn-export" id="btnExportar" title="Exportar a PDF">📥 PDF</button>
+            </div>
         </div>
 
-        <div class="cornell-container">
+        <!-- Área específica que será capturada para el PDF -->
+        <div class="cornell-container" id="pdfArea">
             <div class="cornell-header">
                 <div class="input-group flex-2">
                     <label>Tema / Materia:</label>
@@ -54,6 +62,9 @@
                 <textarea id="summary" placeholder="Escribe un breve resumen de esta página..."></textarea>
             </div>
         </div>
+        
+        <!-- Notificación flotante de guardado -->
+        <div id="toast" class="toast">Guardado correctamente</div>
     </main>
 
     <script src="app.js"></script>
