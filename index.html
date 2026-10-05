@@ -8,14 +8,12 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2c3e50" id="metaThemeColor">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📓</text></svg>">
-    <!-- Librería externa para exportación real a PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <!-- Menú lateral -->
     <aside id="sidebar">
         <div class="sidebar-header">
-            <!-- Contenedor con el logo y el título -->
             <div style="display: flex; align-items: center; gap: 8px;">
                 <img src="./icon.png" alt="Logo Cuaderno" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;">
                 <h3 style="margin: 0; font-size: 1.1rem;">Cuaderno CC</h3>
@@ -32,28 +30,28 @@
             <input type="text" id="noteTitle" class="title-input" placeholder="Título del Apunte...">
             
             <div class="toolbar-actions">
-                <!-- Selector de color de fondo -->
                 <div style="display:flex; flex-direction:column; align-items:center; font-size:10px;">
                     <label style="color: var(--primary); font-weight: bold;">Fondo</label>
                     <input type="color" id="bgColorPicker" value="#f8f9fa" title="Color de fondo de la app">
                 </div>
-                <!-- Selector de color principal (líneas y botones) -->
                 <div style="display:flex; flex-direction:column; align-items:center; font-size:10px;">
                     <label style="color: var(--primary); font-weight: bold;">Líneas</label>
                     <input type="color" id="colorPicker" value="#2c3e50" title="Color principal">
                 </div>
-                
                 <button class="btn btn-save" id="btnGuardar" title="Guardar apunte">💾 Guardar</button>
                 <button class="btn btn-export" id="btnExportar" title="Exportar a PDF">📥 PDF</button>
-                
-                <!-- Botón de instalación PWA (se muestra automáticamente si es compatible) -->
                 <button class="btn btn-install" id="btnInstalar" style="display: none;">📲 Instalar App</button>
             </div>
         </div>
 
-        <!-- Área específica que será capturada para el PDF -->
         <div class="cornell-container" id="pdfArea">
             <div class="cornell-header">
+                <!-- NUEVO: Fila superior completa para el nombre del estudiante -->
+                <div class="input-group" style="flex: 100%; margin-bottom: 10px;">
+                    <label>Estudiante:</label>
+                    <div id="userNameDisplay" style="font-size: 1.1rem; font-weight: bold; padding: 5px 0; border-bottom: 1px dashed var(--border); cursor: pointer;" title="Haz clic para cambiar tu nombre"></div>
+                </div>
+                
                 <div class="input-group flex-2">
                     <label>Tema / Materia:</label>
                     <input type="text" id="noteSubject" placeholder="Ej. Psicología a Distancia...">
@@ -80,7 +78,6 @@
             </div>
         </div>
         
-        <!-- Notificación flotante de guardado -->
         <div id="toast" class="toast">Guardado correctamente</div>
     </main>
 
