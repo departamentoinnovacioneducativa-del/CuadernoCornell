@@ -1,5 +1,5 @@
 // CADA VEZ QUE HAGAS UN CAMBIO EN TU CÓDIGO, CAMBIA ESTE NÚMERO (ej. v3, v4, v5...)
-const CACHE_NAME = 'cornell-cc-v3'; 
+const CACHE_NAME = 'cornell-cc-v4'; 
 
 const urlsToCache = [
     './',
