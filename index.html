@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuaderno Cornel. CC</title>
+    <title>Cuaderno Cornell</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2c3e50" id="metaThemeColor">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📓</text></svg>">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="icon" href="./icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="./icon.png">
 </head>
 <body>
     <!-- Menú lateral -->
@@ -16,11 +16,19 @@
         <div class="sidebar-header">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <img src="./icon.png" alt="Logo Cuaderno" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;">
-                <h3 style="margin: 0; font-size: 1.1rem;">Cuaderno CC</h3>
+                <h3 style="margin: 0; font-size: 1.1rem;">Cuaderno Cornell</h3>
             </div>
             <button class="btn btn-new" id="btnNuevaNota" title="Crear nueva nota">+ Nuevo</button>
         </div>
+        <div class="sidebar-search">
+            <input type="search" id="searchInput" placeholder="🔎 Buscar en mis apuntes..." aria-label="Buscar en mis apuntes">
+        </div>
         <ul class="notes-list" id="notesList"></ul>
+        <div class="sidebar-footer">
+            <button class="btn btn-backup" id="btnRespaldo" title="Descargar una copia de todos tus apuntes en un archivo">⬇️ Respaldo</button>
+            <button class="btn btn-backup" id="btnImportar" title="Recuperar apuntes desde un archivo de respaldo">⬆️ Importar</button>
+            <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+        </div>
     </aside>
 
     <!-- Área principal -->
@@ -28,8 +36,15 @@
         <div class="toolbar">
             <button class="btn btn-menu" id="btnToggleMenu">☰ Menú</button>
             <input type="text" id="noteTitle" class="title-input" placeholder="Título del Apunte...">
-            
+
             <div class="toolbar-actions">
+                <div class="presets" title="Temas de color rápidos">
+                    <button class="preset" data-color="#2c3e50" style="background:#2c3e50" title="Índigo" aria-label="Tema índigo"></button>
+                    <button class="preset" data-color="#032A60" style="background:#032A60" title="Azul Juventud" aria-label="Tema azul Juventud"></button>
+                    <button class="preset" data-color="#6C3483" style="background:#6C3483" title="Morado" aria-label="Tema morado"></button>
+                    <button class="preset" data-color="#1E8449" style="background:#1E8449" title="Verde" aria-label="Tema verde"></button>
+                    <button class="preset" data-color="#922B21" style="background:#922B21" title="Borgoña" aria-label="Tema borgoña"></button>
+                </div>
                 <div style="display:flex; flex-direction:column; align-items:center; font-size:10px;">
                     <label style="color: var(--primary); font-weight: bold;">Fondo</label>
                     <input type="color" id="bgColorPicker" value="#f8f9fa" title="Color de fondo de la app">
@@ -38,20 +53,22 @@
                     <label style="color: var(--primary); font-weight: bold;">Líneas</label>
                     <input type="color" id="colorPicker" value="#2c3e50" title="Color principal">
                 </div>
-                <button class="btn btn-save" id="btnGuardar" title="Guardar apunte">💾 Guardar</button>
-                <button class="btn btn-export" id="btnExportar" title="Exportar a PDF">📥 PDF</button>
+                <span id="saveStatus" class="save-status" title="Tus apuntes se guardan solos en este dispositivo"></span>
+                <button class="btn btn-save" id="btnGuardar" title="Guardar apunte (Ctrl+S)">💾 Guardar</button>
+                <button class="btn btn-export" id="btnExportar" title="Exportar esta hoja a PDF">📥 PDF</button>
+                <button class="btn btn-print" id="btnImprimir" title="Imprimir esta hoja">🖨️</button>
+                <button class="btn btn-help" id="btnAyuda" title="Cómo se usa el Método Cornell">❓</button>
                 <button class="btn btn-install" id="btnInstalar" style="display: none;">📲 Instalar App</button>
             </div>
         </div>
 
         <div class="cornell-container" id="pdfArea">
             <div class="cornell-header">
-                <!-- NUEVO: Fila superior completa para el nombre del estudiante -->
                 <div class="input-group" style="flex: 100%; margin-bottom: 10px;">
                     <label>Estudiante:</label>
                     <div id="userNameDisplay" style="font-size: 1.1rem; font-weight: bold; padding: 5px 0; border-bottom: 1px dashed var(--border); cursor: pointer;" title="Haz clic para cambiar tu nombre"></div>
                 </div>
-                
+
                 <div class="input-group flex-2">
                     <label>Tema / Materia:</label>
                     <input type="text" id="noteSubject" placeholder="Ej. Psicología a Distancia...">
@@ -61,26 +78,59 @@
                     <input type="date" id="noteDate">
                 </div>
             </div>
-            
+
             <div class="box left-col">
                 <label>Palabras Clave / Preguntas</label>
                 <textarea id="cues" placeholder="Anota aquí conceptos, dudas o ideas clave..."></textarea>
             </div>
-            
+
             <div class="box right-col">
                 <label>Notas de Clase</label>
                 <textarea id="notes" placeholder="Desarrolla aquí tus apuntes principales..."></textarea>
             </div>
-            
+
             <div class="box summary-col">
                 <label>Resumen / Síntesis</label>
                 <textarea id="summary" placeholder="Escribe un breve resumen de esta página..."></textarea>
             </div>
         </div>
-        
+
+        <div id="statsBar" class="stats-bar"></div>
+
         <div id="toast" class="toast">Guardado correctamente</div>
     </main>
 
+    <!-- Modal: nombre del estudiante -->
+    <div id="nameModal" class="modal">
+        <div class="modal-box">
+            <h3>👋 Tu nombre</h3>
+            <p>Aparece en el encabezado de tus hojas y de tus PDF. Puedes cambiarlo cuando quieras tocando tu nombre en la hoja.</p>
+            <input type="text" id="nameInput" placeholder="Nombre completo" autocomplete="name">
+            <div class="modal-actions">
+                <button class="btn btn-save" id="btnGuardarNombre">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: ayuda del Método Cornell -->
+    <div id="helpModal" class="modal">
+        <div class="modal-box">
+            <h3>📓 El Método Cornell en 5 pasos</h3>
+            <ol class="help-steps">
+                <li><strong>Registrar:</strong> durante la clase, escribe tus notas en la columna grande de la derecha, con tus palabras.</li>
+                <li><strong>Reducir:</strong> al terminar, destila lo importante en la columna izquierda: palabras clave, preguntas y dudas.</li>
+                <li><strong>Recitar:</strong> tapa la columna de notas y trata de explicar el tema solo con tus palabras clave.</li>
+                <li><strong>Reflexionar:</strong> escribe abajo el resumen: ¿qué entendí?, ¿para qué sirve?, ¿qué me falta?</li>
+                <li><strong>Revisar:</strong> repasa tus hojas unos minutos cada semana; así el tema se queda en memoria de largo plazo.</li>
+            </ol>
+            <p class="help-tip">💡 Tus apuntes se guardan <strong>solos</strong> en este dispositivo. Con «⬇️ Respaldo» descargas una copia de todo; con «⬆️ Importar» la recuperas en otro teléfono o computadora.</p>
+            <div class="modal-actions">
+                <button class="btn btn-save" id="btnCerrarAyuda">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/jspdf.umd.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

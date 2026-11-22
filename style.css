@@ -1,152 +1,327 @@
-/* Variables de Color Dinámicas */
+/* ============================================================
+   CUADERNO CORNELL v2 — interfaz renovada
+   Hoja de papel moderna: tarjetas suaves, renglones de libreta,
+   etiquetas en pastilla y el color del tema en los acentos.
+   ============================================================ */
 :root {
-    --primary: #2c3e50; /* Este valor cambiará dinámicamente con JS */
+    --primary: #2c3e50;
     --accent: #e74c3c;
     --bg: #f8f9fa;
-    --border: #bdc3c7;
-    --text: #333;
+    --border: #d7dee6;
+    --text: #2b3440;
+    --primary-soft: color-mix(in srgb, var(--primary) 9%, #ffffff);
+    --primary-mid: color-mix(in srgb, var(--primary) 32%, #ffffff);
+    --primary-dark: color-mix(in srgb, var(--primary) 82%, #000000);
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(31, 41, 55, 0.10);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    background: var(--bg); 
-    color: var(--text); 
-    display: flex; 
-    height: 100vh; 
-    overflow: hidden; 
+body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background: #c6cfda; border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-track { background: transparent; }
 
 /* --- Sidebar --- */
-aside { 
-    width: 280px; 
-    background: #fff; 
-    border-right: 1px solid var(--border); 
-    display: flex; 
-    flex-direction: column; 
-    transition: transform 0.3s ease; 
+aside {
+    width: 292px;
+    background: #fbfcfe;
+    border-right: 1px solid #e4e9f0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
     z-index: 100;
 }
-.sidebar-header { 
-    padding: 15px; 
-    background: var(--primary); 
-    color: #fff; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
+.sidebar-header {
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
     transition: background 0.3s;
 }
-
-/* --- Botones y Controles --- */
-.btn { border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; color: white; }
-.btn:hover { opacity: 0.9; }
-.btn-new { background: var(--accent); }
-.btn-save { background: #3498db; }
-.btn-export { background: #27ae60; }
-.btn-menu { background: var(--primary); display: none; margin-right: 10px; transition: background 0.3s; }
-
-.toolbar-actions { display: flex; align-items: center; gap: 10px; }
-
-/* Selector de color personalizado */
-input[type="color"] { border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; padding: 0; background: transparent; }
-input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-input[type="color"]::-webkit-color-swatch { border: 2px solid var(--border); border-radius: 50%; transition: border-color 0.3s; }
-
-/* --- Lista de Notas --- */
-.notes-list { list-style: none; overflow-y: auto; flex: 1; }
-.note-item { padding: 12px 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-left 0.3s, background 0.3s; }
-.note-item:hover, .note-item.active { background: #edf2f7; border-left: 4px solid var(--primary); }
-.note-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; flex: 1; }
-.delete-btn { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 16px; padding: 5px; }
-.delete-btn:hover { background: #fadbd8; border-radius: 4px; }
-
-/* --- Área Principal --- */
-main { flex: 1; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; position: relative;}
-.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-.title-input { font-size: 1.5rem; font-weight: bold; border: none; border-bottom: 2px solid var(--primary); background: transparent; outline: none; padding: 5px; flex: 1; min-width: 200px; color: var(--primary); transition: border-color 0.3s, color 0.3s; }
-
-/* --- Grid Método Cornell --- */
-.cornell-container { 
-    display: grid; 
-    grid-template-columns: 30% 70%; 
-    grid-template-rows: auto 1fr auto; 
-    gap: 15px; 
-    flex: 1; 
-    background: #fff; 
-    padding: 20px; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-    min-height: 500px; 
+.sidebar-header h3 { letter-spacing: 0.2px; }
+.sidebar-search { padding: 12px 12px 4px; background: #fbfcfe; }
+.sidebar-search input {
+    width: 100%;
+    padding: 9px 14px;
+    border: 1.5px solid #e1e7ee;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    outline: none;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
+.sidebar-search input:focus { border-color: var(--primary-mid); box-shadow: 0 0 0 3px var(--primary-soft); }
+.sidebar-footer { padding: 10px 12px; border-top: 1px solid #e7ecf2; display: flex; gap: 8px; background: #fbfcfe; }
 
-.cornell-header { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; transition: border-color 0.3s; }
+/* --- Botones --- */
+.btn {
+    border: none;
+    padding: 9px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(31, 41, 55, 0.14);
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+}
+.btn:hover { opacity: 0.94; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(31, 41, 55, 0.16); }
+.btn:active { transform: scale(0.97); }
+.btn-new { background: var(--accent); }
+.btn-save { background: #2f80ed; }
+.btn-export { background: #27ae60; }
+.btn-print { background: #8e6cc8; }
+.btn-help { background: #f39c12; }
+.btn-backup { background: #8494a7; flex: 1; font-size: 0.83rem; padding: 8px 6px; }
+.btn-menu { background: var(--primary); display: none; margin-right: 10px; }
+
+.toolbar-actions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+input[type="color"] { border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; padding: 0; background: transparent; }
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: 2px solid #d5dce4; border-radius: 50%; }
+.presets { display: flex; gap: 5px; align-items: center; }
+.preset { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1.5px #ccd4de; cursor: pointer; padding: 0; transition: transform 0.15s; }
+.preset:hover { transform: scale(1.2); }
+.save-status { font-size: 0.74rem; color: #229954; font-weight: 700; min-width: 84px; text-align: right; }
+
+/* --- Lista de notas: tarjetas --- */
+.notes-list { list-style: none; overflow-y: auto; flex: 1; padding: 8px 4px; }
+.note-item {
+    margin: 5px 8px;
+    padding: 11px 12px;
+    background: #fff;
+    border: 1.5px solid #e7ecf2;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.note-item:hover { border-color: var(--primary-mid); box-shadow: 0 3px 10px rgba(31, 41, 55, 0.07); }
+.note-item.active { background: var(--primary-soft); border-color: var(--primary); }
+.note-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.note-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; font-size: 0.94rem; color: var(--text); }
+.note-item.active .note-title { color: var(--primary); }
+.note-meta { font-size: 0.72rem; color: #8a97a5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.note-actions { display: flex; gap: 2px; }
+.icon-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 5px; border-radius: 7px; color: #5b6b7c; }
+.icon-btn:hover { background: #e8eef4; }
+.delete-btn:hover { background: #fadbd8; }
+.empty-list { padding: 20px 16px; color: #8a97a5; font-size: 0.9rem; text-align: center; line-height: 1.5; }
+
+/* --- Área principal --- */
+main { flex: 1; display: flex; flex-direction: column; padding: 18px; overflow-y: auto; position: relative; }
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #e7ecf2;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 14px rgba(31, 41, 55, 0.05);
+    padding: 10px 14px;
+    margin-bottom: 14px;
+}
+.title-input {
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-bottom: 2.5px solid var(--primary-mid);
+    background: transparent;
+    outline: none;
+    padding: 5px 2px;
+    flex: 1;
+    min-width: 190px;
+    color: var(--primary);
+    transition: border-color 0.3s;
+}
+.title-input:focus { border-color: var(--primary); }
+.title-input::placeholder { color: #a7b3c0; }
+
+/* --- La hoja Cornell --- */
+.cornell-container {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-template-rows: auto 1fr auto;
+    gap: 16px;
+    flex: 1;
+    background: #fff;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid #e7ecf2;
+    min-height: 520px;
+}
+.cornell-header {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    background: var(--primary-soft);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: background 0.3s;
+}
 .input-group { display: flex; flex-direction: column; }
-.input-group label { font-size: 0.85rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; transition: color 0.3s; }
-.input-group input { border: 1px solid var(--border); padding: 8px; border-radius: 4px; font-family: inherit; font-size: 1rem; color: var(--text); }
-.input-group input:focus { border-color: var(--primary); outline: none;}
+.input-group label { font-size: 0.78rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.6px; }
+.input-group input {
+    border: 1.5px solid #dbe2ea;
+    background: #fff;
+    padding: 8px 10px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text);
+}
+.input-group input:focus { border-color: var(--primary-mid); outline: none; box-shadow: 0 0 0 3px var(--primary-soft); }
 .flex-2 { flex: 2; min-width: 200px; }
 .flex-1 { flex: 1; min-width: 130px; }
 
 .box { display: flex; flex-direction: column; }
-.box label { font-size: 0.85rem; font-weight: bold; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s;}
-.box textarea { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 10px; resize: none; font-family: inherit; outline: none; line-height: 1.6; font-size: 1rem; color: var(--text); }
-.box textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1); }
+.box label {
+    align-self: flex-start;
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 9px;
+    transition: background 0.3s;
+    box-shadow: 0 2px 6px rgba(31, 41, 55, 0.15);
+}
+.box textarea {
+    flex: 1;
+    border: 1.5px solid #e0e6ee;
+    border-radius: 12px;
+    padding: 12px 14px;
+    resize: none;
+    font-family: inherit;
+    outline: none;
+    line-height: 28px;
+    font-size: 1rem;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.box textarea:focus { border-color: var(--primary-mid); box-shadow: 0 0 0 3px var(--primary-soft); }
+.box textarea::placeholder { color: #a7b3c0; }
 
-/* Líneas divisorias de Cornell */
-.left-col { grid-column: 1; border-right: 2px solid var(--primary); padding-right: 15px; transition: border-color 0.3s; }
+/* Renglones de libreta: notas con líneas, claves con puntos */
+.right-col textarea {
+    background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 27px, #e6ecf3 27px, #e6ecf3 28px);
+    background-attachment: local;
+    background-position: 0 8px;
+}
+.left-col textarea {
+    background-image: radial-gradient(circle, #dbe3ec 1.1px, transparent 1.2px);
+    background-size: 100% 28px;
+    background-attachment: local;
+    background-position: 0 8px;
+}
+.left-col { grid-column: 1; border-right: 2px dashed var(--primary-mid); padding-right: 16px; }
 .right-col { grid-column: 2; }
-.summary-col { grid-column: 1 / -1; border-top: 2px solid var(--primary); padding-top: 15px; height: 160px; transition: border-color 0.3s; }
+.summary-col { grid-column: 1 / -1; border-top: 2px dashed var(--primary-mid); padding-top: 16px; height: 168px; }
 
-/* --- Notificación Flotante (Toast) --- */
+/* --- Barra de estadísticas --- */
+.stats-bar {
+    margin-top: 12px;
+    background: #fff;
+    border: 1px solid #e7ecf2;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 0.82rem;
+    color: #66788c;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(31, 41, 55, 0.04);
+}
+.stats-bar .meter { flex: 1; min-width: 110px; height: 8px; background: #e8edf3; border-radius: 6px; overflow: hidden; }
+.stats-bar .meter > div { height: 100%; background: var(--primary); border-radius: 6px; transition: width 0.3s, background 0.3s; }
+
+/* --- Toast --- */
 .toast {
     position: absolute;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background: #27ae60;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    background: #229954;
+    color: #fff;
+    padding: 11px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: 0 8px 22px rgba(31, 41, 55, 0.25);
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s ease;
     z-index: 1000;
 }
-.toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* --- Diseño Responsivo (Android/Móviles) --- */
+/* --- Modales --- */
+.modal { position: fixed; inset: 0; background: rgba(23, 32, 44, 0.48); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 16px; }
+.modal.open { display: flex; }
+.modal-box { background: #fff; border-radius: 18px; max-width: 480px; width: 100%; padding: 24px; box-shadow: 0 18px 48px rgba(0,0,0,0.28); max-height: 88vh; overflow-y: auto; }
+.modal-box h3 { margin-bottom: 10px; color: var(--primary); font-size: 1.15rem; }
+.modal-box p { margin-bottom: 12px; line-height: 1.55; font-size: 0.95rem; }
+.modal-box input { width: 100%; padding: 11px 12px; border: 1.5px solid #dbe2ea; border-radius: 10px; font-size: 1rem; font-family: inherit; margin-bottom: 6px; }
+.modal-box input:focus { border-color: var(--primary-mid); outline: none; box-shadow: 0 0 0 3px var(--primary-soft); }
+.modal-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+.help-steps { margin: 0 0 12px 20px; line-height: 1.55; font-size: 0.95rem; }
+.help-steps li { margin-bottom: 7px; }
+.help-tip { background: #fdf6e3; border-radius: 10px; padding: 11px 13px; }
+
+/* --- PDF (modo captura heredado; el PDF principal es por texto) --- */
+.pdf-mode { border: none !important; box-shadow: none !important; }
+.pdf-mode input, .pdf-mode textarea { border: none !important; background: transparent !important; resize: none !important; overflow: hidden !important; }
+
+/* --- Responsivo --- */
 @media (max-width: 768px) {
     body { position: relative; }
-    
-    aside { position: absolute; height: 100%; transform: translateX(-100%); box-shadow: 5px 0 15px rgba(0,0,0,0.2); }
+    aside { position: absolute; height: 100%; width: 84vw; max-width: 320px; transform: translateX(-105%); box-shadow: 8px 0 24px rgba(31,41,55,0.22); }
     aside.open { transform: translateX(0); }
-    
     .btn-menu { display: inline-block; }
-    
-    .cornell-container { 
-        grid-template-columns: 1fr; 
-        display: flex; 
-        flex-direction: column; 
-    }
-    .left-col { border-right: none; border-bottom: 2px dashed var(--primary); padding-right: 0; padding-bottom: 15px; min-height: 150px; }
-    .right-col { min-height: 300px; }
-    .summary-col { border-top: 2px solid var(--primary); height: 150px; }
+    main { padding: 12px; }
+    .cornell-container { grid-template-columns: 1fr; display: flex; flex-direction: column; flex: none; padding: 16px; min-height: 0; }
+    .box textarea { flex: none; }
+    .left-col { border-right: none; border-bottom: 2px dashed var(--primary-mid); padding-right: 0; padding-bottom: 14px; }
+    .left-col textarea { height: 150px; }
+    .right-col textarea { height: 330px; }
+    .summary-col { border-top: 2px dashed var(--primary-mid); height: auto; }
+    .summary-col textarea { height: 140px; }
+    .save-status { min-width: 0; }
 }
 
-/* --- Estilos específicos para la generación de PDF --- */
-.pdf-mode {
-    border: none !important;
-    box-shadow: none !important;
-}
-.pdf-mode input, .pdf-mode textarea {
-    border: none !important;
-    background: transparent !important;
-    resize: none !important;
-    overflow: hidden !important;
+/* --- Impresión: solo la hoja, limpia --- */
+@media print {
+    aside, .toolbar, .stats-bar, .toast, .modal { display: none !important; }
+    body { overflow: visible; height: auto; display: block; background: #fff; }
+    main { overflow: visible; padding: 0; }
+    .cornell-container { box-shadow: none; border: none; min-height: 0; padding: 6px; }
+    .cornell-header { background: none; padding: 4px 0; }
+    .box label { background: none; color: #000; box-shadow: none; padding: 0; border-radius: 0; }
+    .cornell-container input, .cornell-container textarea { border: none !important; background: none !important; overflow: hidden !important; }
 }

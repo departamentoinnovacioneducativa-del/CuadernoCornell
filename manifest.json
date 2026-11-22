@@ -1,17 +1,1 @@
-{
-  "name": "Cuaderno Cornel. CC",
-  "short_name": "Cornel CC",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#f8f9fa",
-  "theme_color": "#2c3e50",
-  "description": "Libreta digital con el Método Cornell.",
-  "icons": [
-    {
-      "src": "./icon.png",
-      "sizes": "192x192 512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
-}
+{"background_color":"#f8f9fa","description":"Libreta digital con el Método Cornell: notas, palabras clave y resumen, con guardado automático y respaldo.","display":"standalone","icons":[{"purpose":"any","sizes":"192x192","src":"./icon-192.png","type":"image/png"},{"purpose":"any","sizes":"512x512","src":"./icon.png","type":"image/png"},{"purpose":"maskable","sizes":"512x512","src":"./icon-maskable.png","type":"image/png"}],"lang":"es","name":"Cuaderno Cornell","scope":"./","short_name":"Cornell","start_url":"./index.html","theme_color":"#2c3e50"}
